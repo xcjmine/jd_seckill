@@ -18,8 +18,8 @@ import (
 
 func init() {
 	rootCmd.AddCommand(jdTdudfpCmd)
-	jdTdudfpCmd.Flags().StringP("good_url","g","","")
-	_=jdTdudfpCmd.MarkFlagRequired("good_url")
+	jdTdudfpCmd.Flags().StringP("good_url", "g", "", "")
+	_ = jdTdudfpCmd.MarkFlagRequired("good_url")
 }
 
 var jdTdudfpCmd = &cobra.Command{
@@ -64,11 +64,11 @@ func startJdTdudfp(cmd *cobra.Command, args []string) {
 		cookies := common.CookieJar.Cookies(u)
 
 		//商品链接
-		good_url,_:=cmd.Flags().GetString("good_url")
+		good_url, _ := cmd.Flags().GetString("good_url")
 
 		//返回的eid和fp
-		returnEid:=""
-		returnFp:=""
+		returnEid := ""
+		returnFp := ""
 
 		//获取到的eid和fp
 		eid := ""
@@ -92,15 +92,15 @@ func startJdTdudfp(cmd *cobra.Command, args []string) {
 			},
 			chromedp.Navigate(good_url),
 			chromedp.WaitVisible("#InitCartUrl"), //加入购物车
-			chromedp.Sleep(2 * time.Second),
+			chromedp.Sleep(2*time.Second),
 			chromedp.Click("#InitCartUrl"),
 			chromedp.WaitVisible(".btn-addtocart"), //去购车结算
-			chromedp.Sleep(2 * time.Second),
+			chromedp.Sleep(2*time.Second),
 			chromedp.Click(".btn-addtocart"),
 			chromedp.WaitVisible(".common-submit-btn"), //去结算
-			chromedp.Sleep(2 * time.Second),
+			chromedp.Sleep(2*time.Second),
 			chromedp.Click(".common-submit-btn"),
-			chromedp.Sleep(3 * time.Second),
+			chromedp.Sleep(3*time.Second),
 			chromedp.Evaluate("_JdTdudfp", &res),
 			chromedp.Evaluate("_JdEid", &eid),
 			chromedp.Evaluate("_JdJrTdRiskFpInfo", &fp),
@@ -115,22 +115,22 @@ func startJdTdudfp(cmd *cobra.Command, args []string) {
 		if gjson.Valid(value) && gjson.Get(value, "eid").String() != "" && gjson.Get(value, "fp").String() != "" {
 			returnEid = gjson.Get(value, "eid").String()
 			returnFp = gjson.Get(value, "fp").String()
-		}else{
-			if eid!="" && fp!=""{
-				returnEid=eid
-				returnFp=fp
+		} else {
+			if eid != "" && fp != "" {
+				returnEid = eid
+				returnFp = fp
 			}
 		}
 
 		//eid,fp合法性判断
-		if returnEid=="" || returnFp=="" {
+		if returnEid == "" || returnFp == "" {
 			log.Error("获取失败，请重新尝试，返回信息:" + value)
-		}else{
+		} else {
 			log.Println("eid:" + returnEid)
 			log.Println("fp:" + returnFp)
 
 			//修改配置文件
-			confFile := common.SoftDir+"/conf.ini"
+			confFile := common.SoftDir + "/conf.ini"
 			cfg, err := goconfig.LoadConfigFile(confFile)
 			if err != nil {
 				log.Error("配置文件不存在，程序退出")
@@ -141,7 +141,7 @@ func startJdTdudfp(cmd *cobra.Command, args []string) {
 			cfg.SetValue("config", "fp", returnFp)
 			if err := goconfig.SaveConfigFile(cfg, confFile); err != nil {
 				log.Error("保存配置文件失败，请手动填入配置文件")
-			}else{
+			} else {
 				log.Println("eid, fp参数已经自动填入配置文件")
 			}
 		}

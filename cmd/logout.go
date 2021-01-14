@@ -14,14 +14,14 @@ func init() {
 var logoutCmd = &cobra.Command{
 	Use:   "logout",
 	Short: "Open JD’s simulated logout",
-	Run: startLogout,
+	Run:   startLogout,
 }
 
-func startLogout(cmd *cobra.Command, args []string)  {
-	if common.Exists(common.SoftDir+"/cookie.txt") {
-		_=os.Remove(common.SoftDir+"/cookie.txt")
+func startLogout(cmd *cobra.Command, args []string) {
+	if common.Exists(common.SoftDir + "/cookie.txt") {
+		_ = os.Remove(common.SoftDir + "/cookie.txt")
 		log.Println("退出成功")
-	}else{
+	} else {
 		log.Error("退出失败，未登录")
 	}
 }

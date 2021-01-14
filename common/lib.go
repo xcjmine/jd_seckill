@@ -5,8 +5,8 @@ import (
 	"fmt"
 	"github.com/makiuchi-d/gozxing"
 	"github.com/makiuchi-d/gozxing/qrcode"
-	"github.com/ztino/jd_seckill/log"
 	goQrcode "github.com/skip2/go-qrcode"
+	"github.com/ztino/jd_seckill/log"
 	"golang.org/x/text/encoding/simplifiedchinese"
 	"golang.org/x/text/transform"
 	"image"
@@ -128,7 +128,7 @@ func OpenImage(qrPath, qrcodeShowType string) {
 		}
 
 		if cmd != nil {
-			if err := cmd.Start();err == nil{
+			if err := cmd.Start(); err == nil {
 				//TODO:照片查看器的进程ID，扫码后自动关闭；MacOS下获取到进程ID不对
 				ViewQrcodePid = cmd.Process.Pid
 			}

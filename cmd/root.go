@@ -12,7 +12,7 @@ var rootCmd = &cobra.Command{
 	Short: "jd_seckill is a Jingdong Moutai seckill script",
 	Run: func(cmd *cobra.Command, args []string) {
 		if len(args) == 0 {
-			_=cmd.Help()
+			_ = cmd.Help()
 		}
 	},
 }

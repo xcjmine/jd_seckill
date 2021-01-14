@@ -272,8 +272,8 @@ func (this *Seckill) SeckillInitInfo() (string, error) {
 	req.SetData("num", seckillNum)
 	req.SetData("isModifyAddress", "false")
 	req.SetUrl("https://marathon.jd.com/seckillnew/orderService/pc/init.action").SetMethod("post")
-	//尝试获取三次
-	errorCount := 3
+	//尝试获取5次
+	errorCount := 5
 	errorMsg := ""
 	for errorCount > 0 {
 		_, body, _ := req.Send().End()

@@ -112,11 +112,13 @@ func Start(seckill *jd_seckill.Seckill, taskNum int) {
 	go CheckSeckillStatus()
 	//抢购总时间超时程序自动退出
 	for time.Now().Unix() < seckillTotalTime {
-		rand.Seed(time.Now().Unix())
+		rand.Seed(time.Now().UnixNano())
 		for i := 1; i <= taskNum; i++ {
 			//避免同一时间并发抢购
-			d := rand.Intn(100)
-			time.Sleep(time.Duration(d) * time.Millisecond)
+			if i > 1 {
+				d := rand.Intn(100)
+				time.Sleep(time.Duration(d) * time.Millisecond)
+			}
 			go task(seckill)
 		}
 		//怕封号的可以增加间隔时间,相反抢到的成功率也减低了

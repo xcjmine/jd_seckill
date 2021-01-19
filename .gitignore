@@ -26,4 +26,4 @@ go.sum
 conf.my.ini
 logs
 *.log
-cookie.txt
+*.txt

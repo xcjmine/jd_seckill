@@ -285,7 +285,7 @@ func (this *Seckill) SeckillInitInfo() (string, error) {
 			errorMsg = body
 		}
 		errorCount = errorCount - 1
-		time.Sleep(300 * time.Millisecond)
+		time.Sleep(100 * time.Millisecond)
 	}
 	return "", errors.New(errorMsg)
 }

@@ -54,7 +54,7 @@ enable = false
 # 目前支持smtp邮箱推送和Server酱推送服务，选值smtp,wechat,dingtalk
 type = none
 # 邮箱推送消息接收人
-email = 
+email =
 #Server酱推送key，当type为wechat有效
 server_chan_sckey =
 

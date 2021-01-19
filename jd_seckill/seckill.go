@@ -3,13 +3,6 @@ package jd_seckill
 import (
 	"errors"
 	"fmt"
-	"github.com/Albert-Zhan/httpc"
-	"github.com/PuerkitoBio/goquery"
-	"github.com/tidwall/gjson"
-	"github.com/unknwon/goconfig"
-	"github.com/ztino/jd_seckill/common"
-	"github.com/ztino/jd_seckill/log"
-	"github.com/ztino/jd_seckill/service"
 	"net/http"
 	"net/url"
 	"os"
@@ -17,6 +10,14 @@ import (
 	"strconv"
 	"strings"
 	"time"
+
+	"github.com/Albert-Zhan/httpc"
+	"github.com/PuerkitoBio/goquery"
+	"github.com/tidwall/gjson"
+	"github.com/unknwon/goconfig"
+	"github.com/ztino/jd_seckill/common"
+	"github.com/ztino/jd_seckill/log"
+	"github.com/ztino/jd_seckill/service"
 )
 
 type Seckill struct {

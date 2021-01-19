@@ -1,10 +1,11 @@
 package cmd
 
 import (
+	"os"
+
 	"github.com/spf13/cobra"
 	"github.com/ztino/jd_seckill/common"
 	"github.com/ztino/jd_seckill/log"
-	"os"
 )
 
 func init() {

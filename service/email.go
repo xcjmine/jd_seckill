@@ -1,10 +1,11 @@
 package service
 
 import (
+	"strconv"
+
 	"github.com/unknwon/goconfig"
 	"github.com/ztino/jd_seckill/log"
 	"gopkg.in/gomail.v2"
-	"strconv"
 )
 
 type Email struct {

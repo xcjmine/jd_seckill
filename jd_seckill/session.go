@@ -3,13 +3,14 @@ package jd_seckill
 import (
 	"encoding/json"
 	"errors"
-	"github.com/Albert-Zhan/httpc"
-	"github.com/ztino/jd_seckill/common"
-	"github.com/ztino/jd_seckill/log"
 	"io/ioutil"
 	"net/http"
 	"net/url"
 	"os"
+
+	"github.com/Albert-Zhan/httpc"
+	"github.com/ztino/jd_seckill/common"
+	"github.com/ztino/jd_seckill/log"
 )
 
 type Session struct {

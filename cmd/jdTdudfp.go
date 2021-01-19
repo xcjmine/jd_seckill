@@ -2,6 +2,10 @@ package cmd
 
 import (
 	"context"
+	"net/url"
+	"os"
+	"time"
+
 	"github.com/chromedp/cdproto/cdp"
 	"github.com/chromedp/cdproto/network"
 	"github.com/chromedp/chromedp"
@@ -11,9 +15,6 @@ import (
 	"github.com/ztino/jd_seckill/common"
 	"github.com/ztino/jd_seckill/jd_seckill"
 	"github.com/ztino/jd_seckill/log"
-	"net/url"
-	"os"
-	"time"
 )
 
 func init() {

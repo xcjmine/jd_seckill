@@ -3,12 +3,6 @@ package common
 import (
 	"bytes"
 	"fmt"
-	"github.com/makiuchi-d/gozxing"
-	"github.com/makiuchi-d/gozxing/qrcode"
-	goQrcode "github.com/skip2/go-qrcode"
-	"github.com/ztino/jd_seckill/log"
-	"golang.org/x/text/encoding/simplifiedchinese"
-	"golang.org/x/text/transform"
 	"image"
 	"image/color"
 	"io/ioutil"
@@ -18,6 +12,13 @@ import (
 	"runtime"
 	"strconv"
 	"time"
+
+	"github.com/makiuchi-d/gozxing"
+	"github.com/makiuchi-d/gozxing/qrcode"
+	goQrcode "github.com/skip2/go-qrcode"
+	"github.com/ztino/jd_seckill/log"
+	"golang.org/x/text/encoding/simplifiedchinese"
+	"golang.org/x/text/transform"
 )
 
 func Rand(min, max int) int {

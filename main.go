@@ -1,13 +1,14 @@
 package main
 
 import (
+	"os"
+	"runtime"
+
 	"github.com/Albert-Zhan/httpc"
 	"github.com/unknwon/goconfig"
 	"github.com/ztino/jd_seckill/cmd"
 	"github.com/ztino/jd_seckill/common"
 	"github.com/ztino/jd_seckill/log"
-	"os"
-	"runtime"
 )
 
 func init() {

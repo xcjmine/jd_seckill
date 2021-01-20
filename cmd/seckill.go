@@ -31,74 +31,74 @@ func startSeckill(cmd *cobra.Command, args []string) {
 	err := session.CheckLoginStatus()
 	if err != nil {
 		log.Error("抢购失败，请重新登录")
-	} else {
-		//活跃用户会话,当会话失效自动退出程序
-		user := jd_seckill.NewUser(common.Client, common.Config)
-		go KeepSession(user)
+		return
+	}
+	//活跃用户会话,当会话失效自动退出程序
+	user := jd_seckill.NewUser(common.Client, common.Config)
+	go KeepSession(user)
 
-		seckill := jd_seckill.NewSeckill(common.Client, common.Config)
-		//直接运行抢购跳过等待抢购时间
-		if !isRun {
-			//获取本地时间与京东云端时间差
-			diffTime, delayTime := seckill.GetDiffTime()
-			if delayTime > 500 {
-				log.Warn("您的网络请求延时比较严重，请考虑更换网络连接！")
-			}
-
-			//获取抢购时间
-			buyDate := common.Config.MustValue("config", "buy_time", "")
-			buyTimeReg := regexp.MustCompile(`(\d{4}-\d{2}-\d{2}\s\d{2}:\d{2}:\d{2})`)
-			buyTimeArr := buyTimeReg.FindAllString(buyDate, 1)
-			if len(buyTimeArr) == 1 {
-				buyDate = buyTimeArr[0]
-			} else {
-				_, buyTimeArr, err := seckill.GetWareBusiness()
-				if err != nil || len(buyTimeArr) != 2 {
-					log.Error("请设置conf.ini中的抢购时间(buy_time)")
-					os.Exit(0)
-				}
-				buyDate = buyTimeArr[0] + ":00"
-			}
-
-			//计算抢购时间
-			loc, _ := time.LoadLocation("Local")
-			t, _ := time.ParseInLocation("2006-01-02 15:04:05", buyDate, loc)
-			buyTime := t.UnixNano()/1e6 + diffTime
-
-			//抢购总时间读取配置文件
-			str := common.Config.MustValue("config", "seckill_time", "5")
-			seckillTime, err := strconv.Atoi(str)
-			if err != nil {
-				seckillTime = 5
-			}
-
-			timerTime := buyTime - time.Now().UnixNano()/1e6 - delayTime //减去网络请求延时时间(1次)，用于提前获取秒杀初始化信息
-			if timerTime >= 0 {                                          //等待抢购
-				log.Warn("还没到达抢购时间:", buyDate, "，等待中...")
-				time.Sleep(time.Duration(timerTime) * time.Millisecond)
-				log.Warn("时间到达，开始抢购……")
-			} else if timerTime <= int64(-seckillTime*6e4) {
-				log.Error("已经超过抢购时间(", buyDate, ")不止", seckillTime, "分钟，败局已定，下次请早！")
-				os.Exit(0)
-			} else {
-				log.Warn("您已经错过抢购时间，但还在抢购总时间(", seckillTime, "分钟)内，直接执行抢购，祝您好运！")
-			}
-		} else {
-			log.Warn("立即开始抢购……")
+	seckill := jd_seckill.NewSeckill(common.Client, common.Config)
+	//直接运行抢购跳过等待抢购时间
+	if !isRun {
+		//获取本地时间与京东云端时间差
+		diffTime, delayTime := seckill.GetDiffTime()
+		if delayTime > 500 {
+			log.Warn("您的网络请求延时比较严重，请考虑更换网络连接！")
 		}
 
-		//提前获取秒杀初始化信息，提高效率，待测试
-		log.Warn("提前获取秒杀初始化信息...")
-		initInfo, _ := seckill.SeckillInitInfo()
-		seckill.SetInitInfo(initInfo)
+		//获取抢购时间
+		buyDate := common.Config.MustValue("config", "buy_time", "")
+		buyTimeReg := regexp.MustCompile(`(\d{4}-\d{2}-\d{2}\s\d{2}:\d{2}:\d{2})`)
+		buyTimeArr := buyTimeReg.FindAllString(buyDate, 1)
+		if len(buyTimeArr) == 1 {
+			buyDate = buyTimeArr[0]
+		} else {
+			_, buyTimeArr, err := seckill.GetWareBusiness()
+			if err != nil || len(buyTimeArr) != 2 {
+				log.Error("请设置conf.ini中的抢购时间(buy_time)")
+				os.Exit(0)
+			}
+			buyDate = buyTimeArr[0] + ":00"
+		}
 
-		//开启抢购任务,第二个参数为开启几个协程
-		//怕封号的可以减少协程数量,相反抢到的成功率也减低了
-		//抢购任务数读取配置文件
-		str := common.Config.MustValue("config", "task_num", "5")
-		taskNum, _ := strconv.Atoi(str)
-		Start(seckill, taskNum)
+		//计算抢购时间
+		loc, _ := time.LoadLocation("Local")
+		t, _ := time.ParseInLocation("2006-01-02 15:04:05", buyDate, loc)
+		buyTime := t.UnixNano()/1e6 + diffTime
+
+		//抢购总时间读取配置文件
+		str := common.Config.MustValue("config", "seckill_time", "5")
+		seckillTime, err := strconv.Atoi(str)
+		if err != nil {
+			seckillTime = 5
+		}
+
+		timerTime := buyTime - time.Now().UnixNano()/1e6 - delayTime //减去网络请求延时时间(1次)，用于提前获取秒杀初始化信息
+		if timerTime >= 0 {                                          //等待抢购
+			log.Warn("还没到达抢购时间:", buyDate, "，等待中...")
+			time.Sleep(time.Duration(timerTime) * time.Millisecond)
+			log.Warn("时间到达，开始抢购……")
+		} else if timerTime <= int64(-seckillTime*6e4) {
+			log.Error("已经超过抢购时间(", buyDate, ")不止", seckillTime, "分钟，败局已定，下次请早！")
+			os.Exit(0)
+		} else {
+			log.Warn("您已经错过抢购时间，但还在抢购总时间(", seckillTime, "分钟)内，直接执行抢购，祝您好运！")
+		}
+	} else {
+		log.Warn("立即开始抢购……")
 	}
+
+	//提前获取秒杀初始化信息，提高效率，待测试
+	log.Warn("提前获取秒杀初始化信息...")
+	initInfo, _ := seckill.SeckillInitInfo()
+	seckill.SetInitInfo(initInfo)
+
+	//开启抢购任务,第二个参数为开启几个协程
+	//怕封号的可以减少协程数量,相反抢到的成功率也减低了
+	//抢购任务数读取配置文件
+	str := common.Config.MustValue("config", "task_num", "5")
+	taskNum, _ := strconv.Atoi(str)
+	Start(seckill, taskNum)
 }
 
 func Start(seckill *jd_seckill.Seckill, taskNum int) {
